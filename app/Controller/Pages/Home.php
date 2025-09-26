@@ -2,6 +2,8 @@
 
 namespace App\Controller\Pages;
 
+use \App\Utils\View;
+
 class Home
 {    
     /**
@@ -11,6 +13,9 @@ class Home
      */
     public static function getHome()
     {
-
+        return View::render('Pages/Home',[
+            'name' => 'IHC - Trabalho',
+            'description' => 'Trabalho de IHC BETA'
+        ]);
     }
 }
