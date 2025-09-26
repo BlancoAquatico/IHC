@@ -1,0 +1,8 @@
+{
+    "name":"bruno/ihc",
+    "autoload": {
+        "psr-4": {
+            "App\\":"app/"
+        }
+    }
+}
