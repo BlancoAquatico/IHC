@@ -3,8 +3,9 @@
 namespace App\Controller\Pages;
 
 use \App\Utils\View;
+use \App\Model\Entity\Organization;
 
-class Home
+class Home extends Page
 {    
     /**
      * Método responsavel por retornar o conteúdo (view) da Home.
@@ -13,9 +14,14 @@ class Home
      */
     public static function getHome()
     {
-        return View::render('Pages/Home',[
-            'name' => 'IHC - Trabalho',
-            'description' => 'Trabalho de IHC BETA'
+        /* Organização */
+        $obOrganization = new Organization();
+        $content = View::render('Pages/Home',[
+            'name'        => $obOrganization->name,
+            'description' => $obOrganization->description,
+            'site'        => $obOrganization->site
         ]);
+
+        return parent::getPage('Projeto IHC', $content);
     }
 }

@@ -30,11 +30,14 @@ class View
         /* Conteído da view */
         $contentView = self::getContentView($view);
 
-        echo "<pre>";
-        print_r($view);
-        echo "</pre>"; exit;
+        /* Chaves do array de Variaveis */
+        $keys = array_keys($vars);
+        $keys = array_map(function($item){
+            return '{{' . $item . '}}';
+        }, $keys);
+        //echo "<pre>"; print_r($keys); echo "</pre>"; exit;
 
         /* Retorna o conteúdo renderizado */
-        return $contentView;
+        return str_replace($keys, array_values($vars), $contentView);
     }
 }
