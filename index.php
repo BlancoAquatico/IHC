@@ -2,9 +2,10 @@
 
 require __DIR__ . '/vendor/autoload.php';
 
-use App\Controller\Pages\Home;
-use App\Http\Response;
 use App\Http\Router;
+use App\Http\Response;
+use App\Controller\Pages\Home;
+
 
 define('URL', 'http://localhost/IHC');
 
@@ -17,3 +18,5 @@ $obRouter->get('/', [
     }
 ]);
 
+/* Imprime o Response da Rota */
+$obRouter->run()->sendResponse();

@@ -2,6 +2,7 @@
 
 namespace App\Http;
 use Closure;
+use Exception;
 class Router
 {    
     /**
@@ -79,9 +80,13 @@ class Router
             }
         }
 
+        /* Padrão de validação da URL */
+        $patternRoute = '/^' . str_replace('/', '\/', $route) . '$/';
         
-        
-        echo "<pre>"; print_r(value: $params); echo "</pre>"; 
+        /* Adiciona a rota dentro da classe */
+        $this->routes[$patternRoute][$method] = $params;
+
+        //echo "<pre>"; print_r(value: $this); echo "</pre>"; 
 
     }
     
@@ -96,5 +101,73 @@ class Router
     public function get($route, $params = [])
     {
         return $this->addRoute('GET', $route, $params);
+    }
+    
+    /**
+     * Método responsável a URI desconsiderando o prefixo
+     *
+     * @return string
+     */
+    private function getUri()
+    {
+        /* Uri da request */ 
+        $uri = $this->request->getUri();
+
+        /* Fatia a URI com préfixo */
+        $xUri = strlen($this->prefix) ? explode(strtolower($this->prefix), $uri) : [$uri];
+
+        /* Retorna a URI sem o préfixo */
+        return end($xUri);
+    }
+    
+    /**
+     * Método responsável por retornar os dados da Rota atual
+     *
+     * @return array
+     */
+    private function getRoute()
+    {
+        /* URI */
+        $uri = $this->getUri();
+
+        /* Method */
+        $httpMethod = $this->request->getHttpMethod();
+
+        /* Valida as Rotas */
+        foreach($this->routes as $patternRoute => $methods){
+
+            /* Verifica se a URI bate o padrão */
+            if(preg_match($patternRoute, $uri)){
+                
+                /* Verifica o método */
+                if($methods[$httpMethod]){
+
+                    /* Retorno dos parâmetros da Rota */
+                    return $methods[$httpMethod];
+                }
+
+                /* Método não permitido */
+                throw new Exception("Método não permitido", 405);
+            }
+
+            /* URL não encontrada */
+            throw new Exception("URL não encontrada", 404);
+            
+        }
+    }
+    
+    /**
+     * Método responsável por executar a rota atual
+     *
+     * @return Response
+     */
+    public function run()
+    {
+        try{
+            $route = $this->getRoute();
+            echo "<pre>"; print_r(value: $route); echo "</pre>"; 
+        }catch(Exception $e){
+            return new Response($e->getCode(), $e->getMessage());
+        }
     }
 }
