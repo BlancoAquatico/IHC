@@ -8,11 +8,11 @@ use \App\Model\Entity\Organization;
 class About extends Page
 {    
     /**
-     * Método responsavel por retornar o conteúdo (view) da Home.
+     * Método responsavel por retornar o conteúdo (view) do SOBRE.
      *
      * @return string
      */
-    public static function getHome()
+    public static function getAbout()
     {
         /* Organização */
         $obOrganization = new Organization();
