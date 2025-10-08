@@ -3,20 +3,15 @@
 require __DIR__ . '/vendor/autoload.php';
 
 use App\Http\Router;
-use App\Http\Response;
-use App\Controller\Pages\Home;
+
 
 
 define('URL', 'http://localhost/IHC');
 
 $obRouter = new Router(URL);
 
-/* Rota Home */
-$obRouter->get('/', [
-    function(){
-        return new Response(200, Home::getHome());
-    }
-]);
+/* Inclui as rotas de páginas */
+include __DIR__ . '/Routes/pages.php';
 
 /* Imprime o Response da Rota */
 $obRouter->run()->sendResponse();

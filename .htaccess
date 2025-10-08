@@ -1,0 +1,12 @@
+# Ativa o motor de reescrita
+RewriteEngine On
+
+# Condição para não aplicar a regra em arquivos existentes
+RewriteCond %{REQUEST_FILENAME} !-f
+
+# Condição para não aplicar a regra em diretórios existentes
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Redireciona tudo que não for arquivo ou diretório para o index.php
+# A flag [L] é crucial para parar o processamento aqui
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]

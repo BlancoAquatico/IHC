@@ -102,7 +102,46 @@ class Router
     {
         return $this->addRoute('GET', $route, $params);
     }
+
+    /**
+     * Método responsável por definir uma rota de POST
+     *
+     * @param  string $route
+     * @param  array  $params
+     * 
+     * @return void
+     */
+    public function post($route, $params = [])
+    {
+        return $this->addRoute('POST', $route, $params);
+    }
     
+    /**
+     * Método responsável por definir uma rota de PUT
+     *
+     * @param  string $route
+     * @param  array  $params
+     * 
+     * @return void
+     */
+    public function put($route, $params = [])
+    {
+        return $this->addRoute('PUT', $route, $params);
+    }
+
+    /**
+     * Método responsável por definir uma rota de DELETE
+     *
+     * @param  string $route
+     * @param  array  $params
+     * 
+     * @return void
+     */
+    public function delete($route, $params = [])
+    {
+        return $this->addRoute('DELETE', $route, $params);
+    }
+
     /**
      * Método responsável a URI desconsiderando o prefixo
      *
@@ -135,25 +174,22 @@ class Router
 
         /* Valida as Rotas */
         foreach($this->routes as $patternRoute => $methods){
-
             /* Verifica se a URI bate o padrão */
-            if(preg_match($patternRoute, $uri)){
+            if(preg_match($patternRoute, $uri, $matches)){
                 
-                /* Verifica o método */
-                if($methods[$httpMethod]){
-
+                /* Verifica se o método (GET, POST, etc.) existe para essa rota */
+                if(isset($methods[$httpMethod])){
                     /* Retorno dos parâmetros da Rota */
                     return $methods[$httpMethod];
                 }
 
-                /* Método não permitido */
+                /* Se o método não for permitido para essa rota, lança exceção 405 */
                 throw new Exception("Método não permitido", 405);
             }
-
-            /* URL não encontrada */
-            throw new Exception("URL não encontrada", 404);
-            
         }
+
+        /* Se o loop terminar e nenhuma rota for encontrada */
+        throw new Exception("URL não encontrada", 404);
     }
     
     /**
@@ -165,7 +201,17 @@ class Router
     {
         try{
             $route = $this->getRoute();
-            echo "<pre>"; print_r(value: $route); echo "</pre>"; 
+
+            /* Verifica o controlador */
+            if(!isset($route['controller'])){
+                throw new Exception("URL não pode ser processada", 500);
+            }
+
+            /* Argumentos da função */
+            $args = [];
+
+            /* Retorna a execução da função */
+            return call_user_func_array($route['controller'], $args);
         }catch(Exception $e){
             return new Response($e->getCode(), $e->getMessage());
         }

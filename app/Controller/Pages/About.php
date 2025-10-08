@@ -5,7 +5,7 @@ namespace App\Controller\Pages;
 use \App\Utils\View;
 use \App\Model\Entity\Organization;
 
-class Home extends Page
+class About extends Page
 {    
     /**
      * Método responsavel por retornar o conteúdo (view) da Home.
@@ -16,11 +16,12 @@ class Home extends Page
     {
         /* Organização */
         $obOrganization = new Organization();
-        $content = View::render('Pages/Home',[
-            'name'        => $obOrganization->name
-
+        $content = View::render('Pages/About',[
+            'name'        => $obOrganization->name,
+            'description' => $obOrganization->description,
+            'site'        => $obOrganization->site
         ]);
 
-        return parent::getPage('HOME > INTER', $content);
+        return parent::getPage('SOBRE < INTER', $content);
     }
 }
